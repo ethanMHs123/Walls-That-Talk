@@ -1,0 +1,294 @@
+/* ==========================================================
+   Walls That Talk — a three-city street art site
+   Built from the Figma file. On wide screens each page is laid
+   out on the 1280px design frame and scales with the window;
+   on phones the same content reflows into a readable column.
+   ========================================================== */
+
+@font-face {
+  font-family: "Gevinson Gothic Study";
+  src: local("Gevinson Gothic Study"), local("GevinsonGothicStudy-Regular"),
+       url("fonts/GevinsonGothicStudy-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+/* Idiqlat where it's installed (it's an optional macOS font); the face is declared
+   at 600 so the Alegreya SemiBold fallback matches the Figma weight elsewhere */
+@font-face {
+  font-family: "WTT Display";
+  src: local("Idiqlat"), local("Idiqlat-Regular");
+  font-weight: 600;
+}
+
+:root {
+  --wtt-ink: #000;
+  --wtt-display: "WTT Display", "Alegreya", Georgia, serif;
+  --wtt-gothic: "Gevinson Gothic Study", "Grenze Gotisch", serif;
+  --wtt-sans: Helvetica, Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  color: var(--wtt-ink);
+  font-family: var(--wtt-sans);
+  background: #fff;
+  overflow-x: hidden;
+}
+
+.wtt-back {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10;
+  padding: 0.4rem 0.7rem;
+  background: rgba(255, 255, 255, 0.85);
+  font: 700 0.72rem/1 var(--wtt-sans);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: inherit;
+}
+.wtt-back:hover, .wtt-back:focus-visible { text-decoration: underline; }
+
+/* ---------- Design frame ---------- */
+
+/* 1 design px = var(--u); positions come from the Figma frame */
+.wtt-canvas {
+  --u: calc(100cqw / 1280);
+  container-type: inline-size;
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  aspect-ratio: 1280 / var(--frame-h);
+  overflow: hidden;
+  background: #fff;
+}
+
+.wtt-canvas > * { position: absolute; margin: 0; }
+
+.wtt-pos {
+  left: calc(var(--x) * var(--u));
+  top: calc(var(--y) * var(--u));
+  width: calc(var(--w) * var(--u));
+}
+
+/* Concrete photo behind Home (opacity matches Figma) */
+.wtt-bg {
+  left: calc(-824 * var(--u));
+  top: calc(-232 * var(--u));
+  width: calc(4096 * var(--u));
+  height: calc(2731 * var(--u));
+  object-fit: cover;
+  opacity: 0.46;
+  pointer-events: none;
+}
+
+/* NYC: the same photo turned portrait, with the graffiti wall darkened in */
+.wtt-bg--nyc {
+  left: calc(-200 * var(--u));
+  top: calc(1.15 * var(--u));
+  width: calc(1638 * var(--u));
+  height: calc(2456.7 * var(--u));
+  opacity: 1;
+  overflow: hidden;
+}
+.wtt-bg--nyc img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(2456.7 * var(--u));
+  height: calc(1638 * var(--u));
+  object-fit: cover;
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.wtt-graffiti {
+  left: calc(-163 * var(--u));
+  top: calc(-16.25 * var(--u));
+  width: calc(1643 * var(--u));
+  height: calc(2539.5 * var(--u));
+  object-fit: cover;
+  mix-blend-mode: darken;
+  opacity: 0.37;
+  pointer-events: none;
+}
+
+.wtt-title {
+  left: calc(62 * var(--u));
+  right: calc(62 * var(--u));
+  top: calc(var(--y) * var(--u));
+  font: 600 calc(96 * var(--u))/normal var(--wtt-display);
+  text-align: center;
+}
+
+/* ---------- Ticket navigation ---------- */
+
+.wtt-tickets {
+  left: calc(89 * var(--u));
+  right: calc(89 * var(--u));
+  top: calc(var(--y) * var(--u));
+  filter: drop-shadow(var(--shadow));
+}
+.wtt-ticket-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: calc(38 * var(--u));
+  margin: 0;
+  padding: calc(18 * var(--u)) 0;
+  list-style: none;
+}
+.wtt-ticket-list li { display: block; }
+.wtt-tickets a { display: block; transition: transform 0.2s ease; }
+.wtt-tickets a:hover, .wtt-tickets a:focus-visible { transform: translateY(-4px); }
+.wtt-tickets a:focus-visible { outline: 3px solid #a0f; outline-offset: 3px; }
+.wtt-tickets img { display: block; width: calc(248 * var(--u)); height: calc(100 * var(--u)); object-fit: cover; }
+.wtt-ticket-list li:nth-child(2) img,
+.wtt-ticket-list li:nth-child(3) img { width: calc(246 * var(--u)); height: calc(99 * var(--u)); }
+.wtt-ticket-list li:nth-child(4) img { height: calc(99 * var(--u)); }
+
+/* ---------- Copy ---------- */
+
+.wtt-intro {
+  left: calc(94 * var(--u));
+  right: calc(89 * var(--u));
+  top: calc(377 * var(--u));
+}
+.wtt-intro h2 { margin: 0; font: 600 calc(32 * var(--u))/normal var(--wtt-display); }
+.wtt-intro p { margin: 0; font: 400 calc(32 * var(--u))/normal var(--wtt-gothic); }
+
+.wtt-event h3,
+.wtt-event h4 { margin: 0; font: 600 calc(var(--h3, 24) * var(--u))/normal var(--wtt-display); }
+.wtt-event h4 { font-size: calc(var(--h4, 20) * var(--u)); }
+.wtt-event p { margin: 0; font: 400 calc(var(--p, 24) * var(--u))/normal var(--wtt-sans); }
+
+.wtt-page--nyc .wtt-event { --h3: 48; --h4: 40; }
+.wtt-page--nyc .wtt-event p { font-weight: 700; }
+
+/* ---------- Timeline (Line moving.json, scrubbed by scroll) ---------- */
+
+.wtt-timeline-anim { aspect-ratio: 1920 / 1080; pointer-events: none; }
+.wtt-timeline-anim svg { display: block; }
+
+/* ---------- Page change (train.json) ---------- */
+
+.wtt-train {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+}
+.wtt-train svg { display: block; }
+.wtt-arriving .wtt-canvas, .wtt-arriving .wtt-back { visibility: hidden; }
+
+/* ---------- "Walls That Talk" lettering ---------- */
+
+/* Box from Figma (1512.49 × 1868.35); artwork turned -5.61° inside it */
+.wtt-tag {
+  left: calc(var(--x) * var(--u));
+  top: calc(var(--y) * var(--u));
+  width: calc(1512.49 * var(--u));
+  height: calc(1868.35 * var(--u));
+  pointer-events: none;
+}
+.wtt-tag img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(1348.3 * var(--u));
+  height: calc(1744.8 * var(--u));
+  object-fit: cover;
+  opacity: 0.89;
+  transform: translate(-50%, -50%) rotate(-5.61deg);
+}
+
+/* Stacking order follows the Figma layers */
+.wtt-bg, .wtt-graffiti { z-index: 0; }
+.wtt-tag { z-index: 1; }
+.wtt-timeline-anim, .wtt-event, .wtt-intro, .wtt-title, .wtt-tickets { z-index: 2; }
+
+/* ---------- Phones: reflow into a column ---------- */
+
+@media (max-width: 760px) {
+  .wtt-canvas {
+    --u: 1px;
+    aspect-ratio: auto;
+    min-height: 100vh;
+    padding: 3.25rem 1rem 4rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .wtt-title { order: -1; }
+  .wtt-back { position: absolute; }
+  .wtt-canvas > * { position: relative; left: auto; right: auto; top: auto; width: auto; }
+
+  .wtt-bg, .wtt-bg--nyc, .wtt-graffiti, .wtt-tag { position: absolute; }
+  .wtt-bg, .wtt-graffiti { inset: 0; width: 100%; height: 100%; }
+  .wtt-bg--nyc { inset: 0; width: 100%; height: 100%; }
+  .wtt-bg--nyc img { width: 100%; height: 100%; transform: none; left: 0; top: 0; }
+
+  .wtt-title { font-size: 2.6rem; margin-bottom: 0.75rem; }
+
+  .wtt-ticket-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    padding: 0;
+  }
+  .wtt-tickets img,
+  .wtt-ticket-list li:nth-child(n) img { width: 100%; height: auto; aspect-ratio: 248 / 100; }
+
+  .wtt-intro { margin: 1.75rem 0 2.25rem; }
+  .wtt-page--nyc .wtt-tickets { margin-bottom: 2.25rem; }
+  .wtt-intro h2 { font-size: 1.35rem; }
+  .wtt-intro p { font-size: 1.15rem; }
+
+  .wtt-timeline-anim, .wtt-desk { display: none; }
+
+  .wtt-event {
+    margin: 0 0 1.75rem 1.9rem;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.78);
+  }
+  .wtt-event::before {
+    content: "";
+    position: absolute;
+    top: 0.9rem;
+    left: -1.9rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #a0f;
+  }
+  .wtt-event::after {
+    content: "";
+    position: absolute;
+    top: 0.9rem;
+    bottom: -2.65rem;
+    left: calc(-1.9rem + 8px);
+    width: 4px;
+    background: #b300ff;
+    z-index: -1;
+  }
+  .wtt-event:last-of-type::after { display: none; }
+  .wtt-event h3, .wtt-page--nyc .wtt-event h3 { font-size: 1.3rem; }
+  .wtt-event h4, .wtt-page--nyc .wtt-event h4 { font-size: 1.1rem; }
+  .wtt-event p, .wtt-page--nyc .wtt-event p { font-size: 1rem; }
+
+  .wtt-tag { top: 18rem; left: 30%; width: 90vw; height: 112vw; opacity: 0.3; }
+  .wtt-tag img { width: 80vw; height: 103vw; }
+  .wtt-page--plain .wtt-tag { position: relative; left: 0; top: auto; width: 100%; height: 125vw; margin-top: 1rem; opacity: 1; }
+  .wtt-page--plain .wtt-tag img { width: 89%; height: 115vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wtt-tickets a { transition: none; }
+}
+
+/* The `font` shorthand resets numerals, so ask for lining figures afterwards */
+.wtt-title, .wtt-intro h2, .wtt-event h3, .wtt-event h4 { font-variant-numeric: lining-nums; }
