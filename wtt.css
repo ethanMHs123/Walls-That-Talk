@@ -157,7 +157,7 @@ body {
 .wtt-intro {
   left: calc(94 * var(--u));
   right: calc(89 * var(--u));
-  top: calc(377 * var(--u));
+  top: calc(var(--y, 377) * var(--u));
 }
 .wtt-intro h2 { margin: 0; font: 600 calc(32 * var(--u))/normal var(--wtt-display); }
 .wtt-intro p { margin: 0; font: 400 calc(32 * var(--u))/normal var(--wtt-gothic); }
