@@ -65,11 +65,27 @@ body {
   max-width: 1280px;
   margin: 0 auto;
   aspect-ratio: 1280 / var(--frame-h);
-  overflow: hidden;
+  overflow: clip;
   background: #fff;
 }
 
 .wtt-canvas > * { position: absolute; margin: 0; }
+
+/* Soft frosted band across the page, behind the text and the line; it follows
+   the scroll (sticky) and fades out at its top and bottom edges */
+.wtt-canvas > .wtt-glass {
+  position: sticky;
+  top: 0;
+  display: block;
+  width: 100%;
+  height: 100vh;
+  background: rgba(255, 255, 255, 0.28);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  pointer-events: none;
+}
 
 .wtt-pos {
   left: calc(var(--x) * var(--u));
@@ -160,28 +176,26 @@ body {
   top: calc(var(--y, 377) * var(--u));
 }
 .wtt-intro h2 { margin: 0; font: 600 calc(32 * var(--u))/normal var(--wtt-display); }
-.wtt-intro p { margin: 0; font: 400 calc(32 * var(--u))/normal var(--wtt-sans); }
+/* All body text shares one size and weight */
+.wtt-intro p,
+.wtt-event p { margin: 0; font: 400 calc(20 * var(--u))/normal var(--wtt-sans); }
 
 .wtt-event h3,
 .wtt-event h4 { margin: 0; font: 600 calc(var(--h3, 40) * var(--u))/normal var(--wtt-display); }
 .wtt-event h4 { font-size: calc(var(--h4, 32) * var(--u)); }
-.wtt-event p { margin: 0; font: 400 calc(var(--p, 24) * var(--u))/normal var(--wtt-sans); }
 
 .wtt-page--nyc .wtt-event,
 .wtt-page--city .wtt-event { --h3: 48; --h4: 40; }
-.wtt-page--nyc .wtt-event p,
-.wtt-page--city .wtt-event p { font-weight: 700; }
 /* A blank line between the subheading and the paragraph (as in Figma) */
 .wtt-event--spaced p { margin-top: calc(28 * var(--u)); }
 
 /* Amsterdam / São Paulo intro and closing: large serif heading, plain sans body */
 .wtt-intro--city h2 { font-size: calc(64 * var(--u)); }
-.wtt-intro--city p { font: 400 calc(40 * var(--u))/normal var(--wtt-sans); }
 
 /* ---------- Photo on a timeline stop (hover or focus the dot) ---------- */
 
 /* Sits over the animated dot; offsets are from the event's top-left in design px */
-.wtt-event:has(.wtt-stop) { z-index: 3; }
+.wtt-event:has(.wtt-stop) { z-index: 4; }
 .wtt-stop {
   position: absolute;
   left: calc(var(--dot-x, -121) * var(--u));
@@ -267,7 +281,8 @@ body {
 /* Stacking order follows the Figma layers */
 .wtt-bg, .wtt-graffiti { z-index: 0; }
 .wtt-tag { z-index: 1; }
-.wtt-timeline-anim, .wtt-event, .wtt-intro, .wtt-title, .wtt-tickets { z-index: 2; }
+.wtt-canvas > .wtt-glass { z-index: 2; }
+.wtt-timeline-anim, .wtt-event, .wtt-intro, .wtt-title, .wtt-tickets { z-index: 3; }
 
 /* ---------- Phones: reflow into a column ---------- */
 
@@ -303,7 +318,8 @@ body {
   .wtt-intro { margin: 1.75rem 0 2.25rem; }
   .wtt-page--nyc .wtt-tickets { margin-bottom: 2.25rem; }
   .wtt-intro h2 { font-size: 1.35rem; }
-  .wtt-intro p { font-size: 1.15rem; }
+  .wtt-intro p { font-size: 1rem; }
+  .wtt-canvas > .wtt-glass { display: none; }
 
   .wtt-timeline-anim, .wtt-desk { display: none; }
 
@@ -338,7 +354,6 @@ body {
   .wtt-event p, .wtt-page--nyc .wtt-event p, .wtt-page--city .wtt-event p { font-size: 1rem; }
   .wtt-event--spaced p { margin-top: 0.5rem; }
   .wtt-intro--city h2 { font-size: 1.6rem; }
-  .wtt-intro--city p { font-size: 1.1rem; }
 
   /* Tap the dot: the photo opens under it, across the card */
   .wtt-stop { left: -2.1rem; top: 0.75rem; width: 24px; height: 24px; }

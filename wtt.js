@@ -47,12 +47,91 @@
       if (!queued) { queued = true; requestAnimationFrame(scrub); }
     }
 
+    // Keep text off the line: each timeline entry gets an invisible float whose
+    // shape follows the drawn line, so its text wraps around the curve and dots.
+    const GAP = 14; // px between the line's edge and the text
+    function linePoints() {
+      line.goToAndStop(LINE_END, true); // every stop and the whole line rendered
+      const pts = [];
+      slot.querySelectorAll('svg path').forEach((p) => {
+        const m = p.getScreenCTM();
+        let len = 0;
+        try { len = p.getTotalLength(); } catch (e) { return; }
+        const box = p.getBoundingClientRect();
+        if (!m || !len || (!box.width && !box.height)) return;
+        const width = parseFloat(getComputedStyle(p).strokeWidth) || 0;
+        const half = (width * Math.hypot(m.a, m.b)) / 2;
+        for (let i = 0; i <= len; i += 3) {
+          const q = new DOMPoint(p.getPointAtLength(i).x, p.getPointAtLength(i).y).matrixTransform(m);
+          pts.push([q.x + window.scrollX, q.y + window.scrollY, half]);
+        }
+      });
+      return pts;
+    }
+    function wrapEntries() {
+      document.querySelectorAll('.wtt-avoid').forEach((f) => f.remove());
+      if (!slot.getBoundingClientRect().height) return; // phones: no line drawn
+      const pts = linePoints();
+      document.querySelectorAll('.wtt-event').forEach((entry) => {
+        let float = null;
+        // Wrapping changes the entry's height, so settle it over a few passes
+        for (let pass = 0; pass < 4; pass++) {
+          const r = entry.getBoundingClientRect();
+          const top = r.top + window.scrollY;
+          const left = r.left + window.scrollX;
+          const near = pts.filter(([, y, h]) => y + h + GAP >= top && y - h - GAP <= top + r.height * 1.5);
+          if (!near.length) break;
+          const xs = near.map(([x]) => x).sort((a, b) => a - b);
+          const fromLeft = xs[xs.length >> 1] < left + r.width / 2; // line on the entry's left side?
+          const step = 6;
+          const shape = [];
+          let reach = 0;
+          const span = r.height * 1.5; // room for the entry to grow as it wraps
+          for (let y = 0; y <= span; y += step) {
+            let edge = 0;
+            near.forEach(([x, py, h]) => {
+              if (Math.abs(py - (top + y)) > h + GAP) return;
+              edge = Math.max(edge, fromLeft ? x + h + GAP - left : left + r.width - (x - h - GAP));
+            });
+            edge = Math.min(Math.max(edge, 0), r.width);
+            reach = Math.max(reach, edge);
+            shape.push([edge, y]);
+          }
+          if (!reach) break;
+          if (!float) {
+            float = document.createElement('span');
+            float.className = 'wtt-avoid';
+            float.setAttribute('aria-hidden', 'true');
+            entry.insertBefore(float, entry.querySelector('h3'));
+          }
+          const h = shape[shape.length - 1][1];
+          const poly = fromLeft
+            ? ['0 0', ...shape.map(([e, y]) => `${e}px ${y}px`), `0 ${h}px`]
+            : [`${reach}px 0`, ...shape.map(([e, y]) => `${reach - e}px ${y}px`), `${reach}px ${h}px`];
+          Object.assign(float.style, {
+            float: fromLeft ? 'left' : 'right',
+            width: `${reach}px`,
+            height: `${h}px`,
+            shapeOutside: `polygon(${poly.join(',')})`,
+          });
+        }
+      });
+    }
+
     line.addEventListener('DOMLoaded', () => {
-      if (reduceMotion) {
-        line.goToAndStop(LINE_END, true);
-        return;
-      }
-      scrub();
+      let resizeTimer;
+      const rewrap = () => {
+        wrapEntries();
+        if (reduceMotion) line.goToAndStop(LINE_END, true);
+        else scrub();
+      };
+      rewrap();
+      if (document.fonts) document.fonts.ready.then(rewrap);
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(rewrap, 150);
+      });
+      if (reduceMotion) return;
       window.addEventListener('scroll', requestScrub, { passive: true });
       window.addEventListener('resize', requestScrub);
     });
