@@ -170,6 +170,55 @@ body {
 .wtt-page--nyc .wtt-event { --h3: 48; --h4: 40; }
 .wtt-page--nyc .wtt-event p { font-weight: 700; }
 
+/* ---------- Photo on a timeline stop (hover or focus the dot) ---------- */
+
+/* Sits over the animated dot; offsets are from the event's top-left in design px */
+.wtt-event:has(.wtt-stop) { z-index: 3; }
+.wtt-stop {
+  position: absolute;
+  left: calc(var(--dot-x, -121) * var(--u));
+  top: calc(var(--dot-y, 37) * var(--u));
+  width: calc(48 * var(--u));
+  height: calc(48 * var(--u));
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+.wtt-stop:focus-visible { outline: 3px solid #a0f; outline-offset: 4px; }
+
+.wtt-stop-photo {
+  position: absolute;
+  left: calc(100% + 18 * var(--u));
+  top: 0;
+  display: block;
+  width: calc(440 * var(--u));
+  padding: calc(10 * var(--u));
+  background: #fff;
+  box-shadow: 6px 10px 2px rgba(0, 0, 0, 0.25);
+  text-align: left;
+  opacity: 0;
+  visibility: hidden;
+  transform: rotate(-2deg) scale(0.94);
+  transform-origin: left top;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  pointer-events: none;
+}
+.wtt-stop-photo img { display: block; width: 100%; height: auto; }
+.wtt-stop-caption {
+  display: block;
+  margin-top: calc(8 * var(--u));
+  font: 600 calc(20 * var(--u))/1.2 var(--wtt-display);
+  color: #000;
+}
+.wtt-stop:hover .wtt-stop-photo,
+.wtt-stop:focus .wtt-stop-photo {
+  opacity: 1;
+  visibility: visible;
+  transform: rotate(-2deg);
+}
+
 /* ---------- Timeline (Line moving.json, scrubbed by scroll) ---------- */
 
 .wtt-timeline-anim { aspect-ratio: 1920 / 1080; pointer-events: none; }
@@ -280,6 +329,19 @@ body {
   .wtt-event h4, .wtt-page--nyc .wtt-event h4 { font-size: 1.1rem; }
   .wtt-event p, .wtt-page--nyc .wtt-event p { font-size: 1rem; }
 
+  /* Tap the dot: the photo opens under it, across the card */
+  .wtt-stop { left: -2.1rem; top: 0.75rem; width: 24px; height: 24px; }
+  .wtt-stop-photo,
+  .wtt-stop:hover .wtt-stop-photo,
+  .wtt-stop:focus .wtt-stop-photo {
+    left: 0;
+    top: calc(100% + 8px);
+    width: min(78vw, 320px);
+    padding: 8px;
+    transform: rotate(-1.5deg);
+  }
+  .wtt-stop-caption { margin-top: 6px; font-size: 1rem; }
+
   .wtt-tag { top: 18rem; left: 30%; width: 90vw; height: 112vw; opacity: 0.3; }
   .wtt-tag img { width: 80vw; height: 103vw; }
   .wtt-page--plain .wtt-tag { position: relative; left: 0; top: auto; width: 100%; height: 125vw; margin-top: 1rem; opacity: 1; }
@@ -287,7 +349,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wtt-tickets a { transition: none; }
+  .wtt-tickets a, .wtt-stop-photo { transition: none; }
 }
 
 /* The `font` shorthand resets numerals, so ask for lining figures afterwards */
