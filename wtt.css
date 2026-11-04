@@ -160,11 +160,11 @@ body {
   top: calc(var(--y, 377) * var(--u));
 }
 .wtt-intro h2 { margin: 0; font: 600 calc(32 * var(--u))/normal var(--wtt-display); }
-.wtt-intro p { margin: 0; font: 400 calc(32 * var(--u))/normal var(--wtt-gothic); }
+.wtt-intro p { margin: 0; font: 400 calc(32 * var(--u))/normal var(--wtt-sans); }
 
 .wtt-event h3,
-.wtt-event h4 { margin: 0; font: 600 calc(var(--h3, 24) * var(--u))/normal var(--wtt-display); }
-.wtt-event h4 { font-size: calc(var(--h4, 20) * var(--u)); }
+.wtt-event h4 { margin: 0; font: 600 calc(var(--h3, 40) * var(--u))/normal var(--wtt-display); }
+.wtt-event h4 { font-size: calc(var(--h4, 32) * var(--u)); }
 .wtt-event p { margin: 0; font: 400 calc(var(--p, 24) * var(--u))/normal var(--wtt-sans); }
 
 .wtt-page--nyc .wtt-event,
