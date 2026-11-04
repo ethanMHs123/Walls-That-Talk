@@ -167,8 +167,16 @@ body {
 .wtt-event h4 { font-size: calc(var(--h4, 20) * var(--u)); }
 .wtt-event p { margin: 0; font: 400 calc(var(--p, 24) * var(--u))/normal var(--wtt-sans); }
 
-.wtt-page--nyc .wtt-event { --h3: 48; --h4: 40; }
-.wtt-page--nyc .wtt-event p { font-weight: 700; }
+.wtt-page--nyc .wtt-event,
+.wtt-page--city .wtt-event { --h3: 48; --h4: 40; }
+.wtt-page--nyc .wtt-event p,
+.wtt-page--city .wtt-event p { font-weight: 700; }
+/* A blank line between the subheading and the paragraph (as in Figma) */
+.wtt-event--spaced p { margin-top: calc(28 * var(--u)); }
+
+/* Amsterdam / São Paulo intro and closing: large serif heading, plain sans body */
+.wtt-intro--city h2 { font-size: calc(64 * var(--u)); }
+.wtt-intro--city p { font: 400 calc(40 * var(--u))/normal var(--wtt-sans); }
 
 /* ---------- Photo on a timeline stop (hover or focus the dot) ---------- */
 
@@ -325,9 +333,12 @@ body {
     z-index: -1;
   }
   .wtt-event:last-of-type::after { display: none; }
-  .wtt-event h3, .wtt-page--nyc .wtt-event h3 { font-size: 1.3rem; }
-  .wtt-event h4, .wtt-page--nyc .wtt-event h4 { font-size: 1.1rem; }
-  .wtt-event p, .wtt-page--nyc .wtt-event p { font-size: 1rem; }
+  .wtt-event h3, .wtt-page--nyc .wtt-event h3, .wtt-page--city .wtt-event h3 { font-size: 1.3rem; }
+  .wtt-event h4, .wtt-page--nyc .wtt-event h4, .wtt-page--city .wtt-event h4 { font-size: 1.1rem; }
+  .wtt-event p, .wtt-page--nyc .wtt-event p, .wtt-page--city .wtt-event p { font-size: 1rem; }
+  .wtt-event--spaced p { margin-top: 0.5rem; }
+  .wtt-intro--city h2 { font-size: 1.6rem; }
+  .wtt-intro--city p { font-size: 1.1rem; }
 
   /* Tap the dot: the photo opens under it, across the card */
   .wtt-stop { left: -2.1rem; top: 0.75rem; width: 24px; height: 24px; }
