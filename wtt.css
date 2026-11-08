@@ -134,7 +134,29 @@ body {
   pointer-events: none;
 }
 
+/* Black header bar behind the white page title */
+.wtt-header {
+  left: 0;
+  top: calc(-3 * var(--u));
+  width: 100%;
+  height: calc(222 * var(--u));
+  background: #000;
+}
+
+/* Amsterdam / São Paulo photo backgrounds, multiplied into the white page */
+.wtt-photo-bg {
+  left: calc(var(--x) * var(--u));
+  top: calc(var(--y) * var(--u));
+  width: calc(var(--w) * var(--u));
+  height: calc(var(--h) * var(--u));
+  object-fit: cover;
+  mix-blend-mode: multiply;
+  opacity: var(--o, 1);
+  pointer-events: none;
+}
+
 .wtt-title {
+  color: #fff;
   left: calc(62 * var(--u));
   right: calc(62 * var(--u));
   top: calc(var(--y) * var(--u));
@@ -196,6 +218,9 @@ body {
 
 /* Sits over the animated dot; offsets are from the event's top-left in design px */
 .wtt-event:has(.wtt-stop) { z-index: 4; }
+/* The entry whose photo is open sits above every other entry */
+.wtt-event:has(.wtt-stop:hover),
+.wtt-event:has(.wtt-stop:focus) { z-index: 5; }
 .wtt-stop {
   position: absolute;
   left: calc(var(--dot-x, -121) * var(--u));
@@ -215,7 +240,7 @@ body {
   left: calc(100% + 18 * var(--u));
   top: 0;
   display: block;
-  width: calc(440 * var(--u));
+  width: calc(var(--photo-w, 440) * var(--u));
   padding: calc(10 * var(--u));
   background: #fff;
   box-shadow: 6px 10px 2px rgba(0, 0, 0, 0.25);
@@ -228,6 +253,10 @@ body {
   pointer-events: none;
 }
 .wtt-stop-photo img { display: block; width: 100%; height: auto; }
+/* Two photos on one stop sit side by side */
+.wtt-stop-photo--pair { --photo-w: 640; }
+.wtt-stop-pair { display: flex; gap: calc(8 * var(--u)); align-items: flex-start; }
+.wtt-stop-pair img { width: 50%; }
 .wtt-stop-caption {
   display: block;
   margin-top: calc(8 * var(--u));
@@ -279,10 +308,10 @@ body {
 }
 
 /* Stacking order follows the Figma layers */
-.wtt-bg, .wtt-graffiti { z-index: 0; }
+.wtt-bg, .wtt-graffiti, .wtt-photo-bg { z-index: 0; }
 .wtt-tag { z-index: 1; }
 .wtt-canvas > .wtt-glass { z-index: 2; }
-.wtt-timeline-anim, .wtt-event, .wtt-intro, .wtt-title, .wtt-tickets { z-index: 3; }
+.wtt-timeline-anim, .wtt-event, .wtt-intro, .wtt-header, .wtt-title, .wtt-tickets { z-index: 3; }
 
 /* ---------- Phones: reflow into a column ---------- */
 
@@ -299,8 +328,10 @@ body {
   .wtt-back { position: absolute; }
   .wtt-canvas > * { position: relative; left: auto; right: auto; top: auto; width: auto; }
 
-  .wtt-bg, .wtt-bg--nyc, .wtt-graffiti, .wtt-tag { position: absolute; }
-  .wtt-bg, .wtt-graffiti { inset: 0; width: 100%; height: 100%; }
+  .wtt-bg, .wtt-bg--nyc, .wtt-graffiti, .wtt-photo-bg, .wtt-tag, .wtt-header { position: absolute; }
+  .wtt-bg, .wtt-graffiti, .wtt-photo-bg { inset: 0; width: 100%; height: 100%; }
+  /* The title is reordered first on phones, so keep the bar a layer below it */
+  .wtt-header { top: 0; left: 0; width: 100%; height: 7.25rem; z-index: 2; }
   .wtt-bg--nyc { inset: 0; width: 100%; height: 100%; }
   .wtt-bg--nyc img { width: 100%; height: 100%; transform: none; left: 0; top: 0; }
 
