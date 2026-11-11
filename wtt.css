@@ -160,7 +160,18 @@ body {
   left: calc(62 * var(--u));
   right: calc(62 * var(--u));
   top: calc(var(--y) * var(--u));
-  font: 600 calc(96 * var(--u))/normal var(--wtt-display);
+  font: 600 calc(var(--size, 96) * var(--u))/normal var(--wtt-display);
+  text-align: center;
+}
+
+/* Line under the title, inside the header bar (Home) */
+.wtt-subtitle {
+  left: calc(62 * var(--u));
+  right: calc(62 * var(--u));
+  top: calc(var(--y) * var(--u));
+  color: #fff;
+  font: 400 calc(28 * var(--u))/1.2 var(--wtt-sans);
+  letter-spacing: 0.02em;
   text-align: center;
 }
 
@@ -311,7 +322,7 @@ body {
 .wtt-bg, .wtt-graffiti, .wtt-photo-bg { z-index: 0; }
 .wtt-tag { z-index: 1; }
 .wtt-canvas > .wtt-glass { z-index: 2; }
-.wtt-timeline-anim, .wtt-event, .wtt-intro, .wtt-header, .wtt-title, .wtt-tickets { z-index: 3; }
+.wtt-timeline-anim, .wtt-event, .wtt-intro, .wtt-header, .wtt-title, .wtt-subtitle, .wtt-tickets { z-index: 3; }
 
 /* ---------- Phones: reflow into a column ---------- */
 
@@ -324,7 +335,7 @@ body {
     display: flex;
     flex-direction: column;
   }
-  .wtt-title { order: -1; }
+  .wtt-title, .wtt-subtitle { order: -1; }
   .wtt-back { position: absolute; }
   .wtt-canvas > * { position: relative; left: auto; right: auto; top: auto; width: auto; }
 
@@ -336,6 +347,9 @@ body {
   .wtt-bg--nyc img { width: 100%; height: 100%; transform: none; left: 0; top: 0; }
 
   .wtt-title { font-size: 2.6rem; margin-bottom: 0.75rem; }
+  .wtt-canvas:has(.wtt-subtitle) .wtt-title { margin-bottom: 0.35rem; }
+  .wtt-subtitle { font-size: 0.95rem; margin-bottom: 1.4rem; padding: 0 0.5rem; }
+  .wtt-canvas:has(.wtt-subtitle) .wtt-header { height: 10rem; }
 
   .wtt-ticket-list {
     display: grid;
